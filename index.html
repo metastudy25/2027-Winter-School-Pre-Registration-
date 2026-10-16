@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>2027 이든 윈터스쿨 사전 예약</title>
+<meta name="description" content="이든관리형학습센터 2027 윈터스쿨 사전 예약 신청">
+<meta name="theme-color" content="#0f1d3a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 예약 전용 단독 앱: 짧은 상단 → 일정·혜택 → 3단계 신청서 → 완료 화면. 색은 안내 페이지와 같은 겨울 톤 */
+:root{
+  --ink:#0f1d3a; --ink-2:#1f3563; --ice:#e8f0fa; --snow:#ffffff; --frost:#9db7d9;
+  --ember:#c8553d; --text:#1c2333; --muted:#5b6578; --line:#d6e0ee;
+  --display:"Gowun Batang","Nanum Myeongjo",serif;
+  --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--ice);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.7;word-break:keep-all}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+.wrap{max-width:680px;margin:0 auto;padding-inline:16px}
+
+/* 상단 */
+.top{background:var(--ink);color:var(--snow);padding:40px 0 30px}
+.top .wrap{display:grid;gap:12px}
+.tag{font-size:.8rem;color:var(--frost);letter-spacing:.08em}
+.top h1{font-family:var(--display);font-size:clamp(1.7rem,6.5vw,2.4rem);line-height:1.25}
+.top h1 em{font-style:normal;color:#f2b8a8}
+.top .lead{color:#d5e1f2;font-size:.95rem}
+
+/* 일정 */
+.card{background:var(--snow);border:1px solid var(--line);border-radius:14px;padding:20px 18px;display:grid;gap:12px}
+.card h2{font-family:var(--display);font-size:1.2rem;color:var(--ink)}
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.timeline li{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.93rem}
+.timeline li:last-child{border-bottom:0}
+.timeline b{color:var(--ink)}
+.timeline span{font-variant-numeric:tabular-nums;color:var(--text)}
+.timeline li.main{background:var(--ice);margin-inline:-10px;padding-inline:10px;border-radius:8px;border-bottom:0}
+.timeline li.main b{color:var(--ember)}
+@media (max-width:380px){.timeline li{grid-template-columns:1fr;gap:0}}
+.note{font-size:.82rem;color:var(--muted)}
+
+/* 혜택 */
+.benefit{background:var(--ink-2);color:var(--snow);border-radius:14px;padding:20px 18px;display:grid;gap:14px}
+.benefit h2{font-family:var(--display);font-size:1.2rem}
+.ben-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ben{background:rgba(255,255,255,.07);border:1px solid rgba(157,183,217,.35);border-radius:10px;padding:12px 10px;display:grid;gap:2px;text-align:center}
+.ben .big{font-family:var(--display);font-size:1.5rem;color:#f2b8a8;line-height:1.2}
+.ben b{font-size:.85rem}
+.benefit .sub{color:#c9d7ec;font-size:.85rem}
+@media (max-width:360px){.ben-grid{grid-template-columns:1fr}}
+
+main{display:grid;gap:16px;padding-block:20px 40px}
+
+/* 단계 표시 */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;counter-reset:s}
+.steps li{counter-increment:s;font-size:.8rem;color:var(--muted);text-align:center;display:grid;gap:6px}
+.steps li::before{content:"";display:block;height:5px;border-radius:5px;background:var(--line)}
+.steps li.on{color:var(--ink);font-weight:700}
+.steps li.on::before,.steps li.done::before{background:var(--ember)}
+
+/* 신청서 */
+.form{display:grid;gap:20px}
+.pane{display:grid;gap:18px}
+.pane h2{font-family:var(--display);font-size:1.25rem;color:var(--ink)}
+.field{display:grid;gap:6px}
+.field>label,.legend{font-weight:700;color:var(--ink);font-size:.95rem}
+.req{color:var(--ember);margin-left:3px}
+.hint{font-size:.82rem;color:var(--muted)}
+input[type=text],input[type=tel],input[type=date],select,textarea{width:100%;padding:12px;border:1px solid #b9c7dc;border-radius:8px;font:inherit;font-size:1rem;background:var(--snow);color:var(--text)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:480px){.row2{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.chip span{display:inline-block;padding:9px 14px;border:1px solid #b9c7dc;border-radius:999px;font-size:.9rem;background:var(--snow);color:var(--text)}
+.chip input:checked+span{background:var(--ink);border-color:var(--ink);color:var(--snow)}
+.chips.col{display:grid;gap:8px}
+.chips.col .chip span{display:block;border-radius:10px}
+.group{border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px;margin:0;min-width:0}
+.group legend{padding:0 6px}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.slots .chip span{display:block;text-align:center;border-radius:8px;font-variant-numeric:tabular-nums}
+.agree{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--muted)}
+.agree input{margin-top:5px;width:18px;height:18px;flex:none}
+.msg{border-radius:10px;padding:14px 16px;font-size:.95rem}
+.msg.err{background:#fde6e1;color:#8a2a17}
+.msg.ok{background:#e3f1e8;color:#1e5a37}
+.msg.info{background:var(--ice);color:var(--ink)}
+.nav{display:flex;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;padding:15px 22px;font:700 1rem var(--body);cursor:pointer;text-decoration:none;flex:1}
+.btn-ember{background:var(--ember);color:#fff}
+.btn-ember:hover{background:#b14630}
+.btn-ghost{background:var(--snow);color:var(--ink);border:1px solid #b9c7dc;flex:0 0 auto}
+.btn[disabled]{opacity:.6;cursor:wait}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.chip input:focus-visible+span{outline:3px solid #f2b8a8;outline-offset:2px}
+
+/* 완료 화면 */
+.done{text-align:center;display:grid;gap:12px;justify-items:center;padding:28px 18px}
+.done .mark{width:64px;height:64px;border-radius:50%;background:#e3f1e8;color:#1e5a37;display:grid;place-items:center;font-size:2rem;font-weight:900}
+.done h2{font-family:var(--display);color:var(--ink);font-size:1.4rem}
+.done p{color:var(--muted)}
+
+.contact{display:grid;gap:4px;text-align:center;color:var(--muted);font-size:.9rem}
+.contact a{font-size:1.4rem;font-weight:900;color:var(--ink);font-variant-numeric:tabular-nums;text-decoration:none}
+footer{background:var(--ink);color:var(--frost);text-align:center;padding:22px 16px calc(22px + env(safe-area-inset-bottom,0px));font-size:.8rem}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="tag">2027 EDEN WINTER SCHOOL · 사전 예약</span>
+    <h1>2027 이든 윈터스쿨<br><em>사전 예약</em> 신청</h1>
+    <p class="lead">정보를 남겨 주시면 담당 선생님이 순차적으로 확인 전화를 드리고 방문 상담 일정을 잡아 드립니다.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="sch-title">
+    <h2 id="sch-title">일정</h2>
+    <ol class="timeline">
+      <li><b>Pre-Winter 1차</b><span>2026.11.16(월) 시작</span></li>
+      <li><b>Pre-Winter 2차</b><span>2026.12.1(화) 시작</span></li>
+      <li><b>Pre-Winter 3차</b><span>2026.12.14(월) 시작</span></li>
+      <li class="main"><b>본과정 8주</b><span>2027.1.4(월) ~ 2.28(일)</span></li>
+    </ol>
+    <p class="note">Pre-Winter로 생활 리듬을 먼저 잡고, 방학이 시작되면 본과정으로 그대로 이어갑니다. 대상: 고등부(예비 고1~고3·N수생), 중등부(예비 중1~중3)</p>
+  </section>
+
+  <section class="benefit" aria-labelledby="ben-title">
+    <h2 id="ben-title">사전 등록 혜택</h2>
+    <div class="ben-grid">
+      <div class="ben"><span class="big">5%</span><b>수강료 할인</b></div>
+      <div class="ben"><span class="big">좌석</span><b>우선 선택</b></div>
+      <div class="ben"><span class="big">11.30</span><b>까지 완납</b></div>
+    </div>
+    <p class="sub">2026년 11월 30일(월)까지 사전 등록·완납하시면 적용됩니다. 좌석이 한정되어 선착순으로 마감되며, 수강료는 방문 상담 때 학년과 과정에 맞춰 안내해 드립니다.</p>
+  </section>
+
+  <section class="card" id="apply" aria-label="사전 예약 신청서">
+    <ol class="steps" id="steps" aria-label="신청 단계">
+      <li class="on">학생 정보</li>
+      <li>학습 고민</li>
+      <li>상담 일정</li>
+    </ol>
+
+    <form class="form" id="winter-form" novalidate>
+      <div class="msg info" id="preview-note" hidden>미리보기 화면입니다. 접수용 구글 시트를 연결하면 신청서가 실제로 접수됩니다.</div>
+
+      <!-- 1단계: 학생 정보 -->
+      <div class="pane" data-step="0">
+        <h2>1. 학생 정보</h2>
+        <fieldset class="group">
+          <legend class="legend">신청 과정<span class="req">*</span></legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="track" id="track_h" value="고등부" checked><span>고등부</span></label>
+            <label class="chip"><input type="radio" name="track" id="track_m" value="중등부"><span>중등부</span></label>
+          </div>
+        </fieldset>
+        <div class="row2">
+          <div class="field"><label for="f_student_name">학생 이름<span class="req">*</span></label><input type="text" id="f_student_name" autocomplete="off" required></div>
+          <div class="field"><label for="f_school_name">학교 이름<span class="req">*</span></label><input type="text" id="f_school_name" required placeholder="예: 미사고"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f_grade">2027년 학년<span class="req">*</span></label><select id="f_grade" required></select></div>
+          <div class="field"><span class="legend">성별</span>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="gender" value="남"><span>남</span></label>
+              <label class="chip"><input type="radio" name="gender" value="여"><span>여</span></label>
+            </div></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f_school_grade" id="school_grade_label">최근 내신 등급</label><input type="text" id="f_school_grade" placeholder="예: 국2 수3 영2"></div>
+          <div class="field" id="mock_field"><label for="f_mock_grade">최근 모의고사 등급</label><input type="text" id="f_mock_grade" placeholder="예: 국2 수2 영1"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f_parent_phone">학부모 연락처<span class="req">*</span></label><input type="tel" id="f_parent_phone" required placeholder="010-0000-0000" inputmode="tel" autocomplete="tel"></div>
+          <div class="field"><label for="f_student_phone">학생 연락처</label><input type="tel" id="f_student_phone" placeholder="010-0000-0000" inputmode="tel"></div>
+        </div>
+        <fieldset class="group">
+          <legend class="legend">시작 희망 시기<span class="req">*</span></legend>
+          <div class="chips col" id="start-chips"></div>
+        </fieldset>
+      </div>
+
+      <!-- 2단계: 학습 고민 -->
+      <div class="pane" data-step="1" hidden>
+        <h2>2. 학습 고민</h2>
+        <fieldset class="group">
+          <legend class="legend">이번 겨울방학에 가장 집중하고 싶은 과목<span class="req">*</span></legend>
+          <span class="hint">여러 개 고를 수 있습니다</span>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="focus_subject" value="국어"><span>국어</span></label>
+            <label class="chip"><input type="checkbox" name="focus_subject" value="수학"><span>수학</span></label>
+            <label class="chip"><input type="checkbox" name="focus_subject" value="영어"><span>영어</span></label>
+            <label class="chip"><input type="checkbox" name="focus_subject" value="탐구"><span>탐구</span></label>
+            <label class="chip"><input type="checkbox" name="focus_subject" value="한국사"><span>한국사</span></label>
+            <label class="chip"><input type="checkbox" name="focus_subject" value="자기주도학습"><span>자기주도 학습 습관</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="group">
+          <legend class="legend">학습에서 가장 개선하고 싶은 점<span class="req">*</span></legend>
+          <span class="hint">여러 개 고를 수 있습니다</span>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="improvement" value="집중력"><span>오래 앉아 있지 못함</span></label>
+            <label class="chip"><input type="checkbox" name="improvement" value="스마트폰"><span>스마트폰·미디어 유혹</span></label>
+            <label class="chip"><input type="checkbox" name="improvement" value="실천력"><span>작심삼일 계획</span></label>
+            <label class="chip"><input type="checkbox" name="improvement" value="공부방법"><span>효율적인 공부 방법 부재</span></label>
+            <label class="chip"><input type="checkbox" name="improvement" value="생활패턴"><span>방학 생활 리듬 붕괴</span></label>
+            <label class="chip"><input type="checkbox" name="improvement" value="동기부여"><span>목표·동기 부족</span></label>
+            <label class="chip"><input type="checkbox" name="improvement" value="시험불안"><span>시험 불안·스트레스</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="group">
+          <legend class="legend">[영어] 바로잡고 싶은 부분</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="english_issue" value="어휘력"><span>어휘력 부족</span></label>
+            <label class="chip"><input type="checkbox" name="english_issue" value="문법"><span>문법·구조 분석</span></label>
+            <label class="chip"><input type="checkbox" name="english_issue" value="속도/문해력"><span>독해 속도·문해력</span></label>
+            <label class="chip"><input type="checkbox" name="english_issue" value="서술형"><span>서술형·내신 주관식</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="group">
+          <legend class="legend">[수학] 바로잡고 싶은 부분</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="math_issue" value="눈팅학습"><span>눈으로만 하는 공부</span></label>
+            <label class="chip"><input type="checkbox" name="math_issue" value="심화기피"><span>심화·고난도 기피</span></label>
+            <label class="chip"><input type="checkbox" name="math_issue" value="연산실수"><span>반복되는 계산 실수</span></label>
+            <label class="chip"><input type="checkbox" name="math_issue" value="오답관리"><span>형식적인 오답 관리</span></label>
+            <label class="chip"><input type="checkbox" name="math_issue" value="기초결손"><span>이전 학년 결손</span></label>
+            <label class="chip"><input type="checkbox" name="math_issue" value="진도불안"><span>진도에 대한 불안</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="group">
+          <legend class="legend">[국어·탐구·학습 균형] 바로잡고 싶은 부분</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="general_issue" value="국어문해력"><span>국어 문해력·시간 부족</span></label>
+            <label class="chip"><input type="checkbox" name="general_issue" value="탐구방치"><span>탐구 과목 방치</span></label>
+            <label class="chip"><input type="checkbox" name="general_issue" value="밸런스붕괴"><span>과목 간 균형 붕괴</span></label>
+            <label class="chip"><input type="checkbox" name="general_issue" value="양치기"><span>깊이 없는 문제 양치기</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 3단계: 상담 일정·동의 -->
+      <div class="pane" data-step="2" hidden>
+        <h2>3. 상담 일정</h2>
+        <fieldset class="group">
+          <legend class="legend">방문 상담 희망 일시<span class="req">*</span></legend>
+          <input type="date" id="consult_date" required aria-label="방문 상담 희망 날짜">
+          <span id="dow" class="hint" aria-live="polite">날짜를 고르면 가능한 시간이 나옵니다</span>
+          <div class="slots" id="slots"></div>
+        </fieldset>
+        <fieldset class="group">
+          <legend class="legend">사전 등록 혜택</legend>
+          <label class="agree" style="color:var(--text)"><input type="checkbox" id="f_early" value="희망"><span>11월 30일까지 사전 등록·완납하고 <b>수강료 5% 할인</b>과 <b>좌석 선택</b> 혜택을 받고 싶습니다.</span></label>
+        </fieldset>
+        <div class="field"><label for="f_message">문의 및 추가 고민</label><textarea id="f_message" rows="4" placeholder="궁금하신 점이나 학생에 대해 미리 알려 주실 내용을 적어 주세요."></textarea></div>
+        <label class="agree"><input type="checkbox" id="f_privacy" required><span>[필수] 개인정보 수집 및 이용에 동의합니다. 수집 항목: 학생·학부모 이름과 연락처, 학교·학년·성적 정보. 이용 목적: 상담 예약과 학원 안내. 보관 기간은 상담 종료 후 파기 시까지입니다.</span></label>
+      </div>
+
+      <div class="msg" id="form-msg" role="alert" hidden></div>
+      <div class="nav">
+        <button type="button" class="btn btn-ghost" id="prev-btn" hidden>이전</button>
+        <button type="button" class="btn btn-ember" id="next-btn">다음</button>
+        <button type="submit" class="btn btn-ember" id="submit-btn" hidden>사전 예약 신청하기</button>
+      </div>
+    </form>
+
+    <div class="done" id="done" hidden>
+      <div class="mark" aria-hidden="true">✓</div>
+      <h2>신청이 접수되었습니다</h2>
+      <p id="done-text">담당 선생님이 확인 후 연락드리겠습니다.</p>
+      <button type="button" class="btn btn-ghost" id="again-btn">다른 학생 신청하기</button>
+    </div>
+  </section>
+
+  <div class="contact">
+    <span>상담 · 사전 예약 문의</span>
+    <a href="tel:01084422817">010-8442-2817</a>
+    <span>하남시 미사강변대로 80 그린프라자 7층 이든관리형학습센터</span>
+  </div>
+</main>
+
+<footer>© 2027 이든관리형학습센터 · 이든X학원 · 미사이든학원</footer>
+
+<script>
+/* ★ 구글 시트 연결: Apps Script 배포 후 받은 웹 앱 URL을 아래 따옴표 안에 붙여 넣으세요. 비어 있으면 미리보기로 동작합니다. */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYQyzIzBj3qf7oVHtGQE1qkiGCJlJlB5lJFGfpomDEx6-GNEuxZirkycXC6nyupWNl/exec";
+
+const GRADES = {
+  "고등부": ["예비 고1","예비 고2","예비 고3","N수생"],
+  "중등부": ["예비 중1","예비 중2","예비 중3"]
+};
+const PRE = ["Pre-Winter 1차 (11.16 시작)","Pre-Winter 2차 (12.1 시작)","Pre-Winter 3차 (12.14 시작)"];
+const STARTS = {
+  "고등부": [...PRE, "본과정 (1.4 시작)", "상담 후 결정"],
+  "중등부": [...PRE, "본과정 (1.4 시작)", "상담 후 결정"]
+};
+const SLOTS = {
+  weekday: ["10:00","11:00","13:30","14:30","20:00","21:00"],
+  weekend: ["10:00","11:00","13:30","14:30","15:30"]
+};
+const DAYS = ["일","월","화","수","목","금","토"];
+const $ = (id) => document.getElementById(id);
+const form = $("winter-form");
+const panes = [...document.querySelectorAll(".pane")];
+let step = 0;
+
+function track(){ return (document.querySelector('input[name="track"]:checked')||{}).value || "고등부"; }
+function checked(name){ return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(e => e.value).join(", "); }
+
+function renderTrack(){
+  const t = track();
+  $("f_grade").innerHTML = '<option value="">선택해 주세요</option>' + GRADES[t].map(g => `<option value="${g}">${g}</option>`).join("");
+  $("start-chips").innerHTML = STARTS[t].map(s => `<label class="chip"><input type="radio" name="start" value="${s}"><span>${s}</span></label>`).join("");
+  $("mock_field").hidden = t !== "고등부";
+  $("school_grade_label").textContent = t === "고등부" ? "최근 내신 등급" : "최근 학교 시험 성적";
+  $("f_school_grade").placeholder = t === "고등부" ? "예: 국2 수3 영2" : "예: 영어 88, 수학 76";
+}
+document.querySelectorAll('input[name="track"]').forEach(r => r.addEventListener("change", renderTrack));
+
+function renderSlots(){
+  const v = $("consult_date").value;
+  const box = $("slots");
+  if(!v){ box.innerHTML = ""; $("dow").textContent = "날짜를 고르면 가능한 시간이 나옵니다"; return; }
+  const [y,m,d] = v.split("-").map(Number);
+  const day = new Date(y, m-1, d).getDay();
+  const weekend = day === 0 || day === 6;
+  $("dow").textContent = `${m}월 ${d}일 (${DAYS[day]}) · ${weekend ? "주말" : "주중"} 상담 시간`;
+  box.innerHTML = SLOTS[weekend ? "weekend" : "weekday"].map(s => `<label class="chip"><input type="radio" name="consult_time" value="${s}"><span>${s}</span></label>`).join("");
+}
+$("consult_date").addEventListener("change", renderSlots);
+(function setMinDate(){
+  const t = new Date(); const p = n => String(n).padStart(2,"0");
+  $("consult_date").min = `${t.getFullYear()}-${p(t.getMonth()+1)}-${p(t.getDate())}`;
+})();
+
+function showMsg(kind, text){
+  const el = $("form-msg"); el.className = "msg " + kind; el.textContent = text; el.hidden = false;
+  el.scrollIntoView({block:"center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+}
+
+const RULES = [
+  () => [
+    [$("f_student_name").value.trim(), "학생 이름을 적어 주세요."],
+    [$("f_school_name").value.trim(), "학교 이름을 적어 주세요."],
+    [$("f_grade").value, "2027년 학년을 골라 주세요."],
+    [/^0\d{1,2}-?\d{3,4}-?\d{4}$/.test($("f_parent_phone").value.trim()), "학부모 연락처를 010-0000-0000 형식으로 적어 주세요."],
+    [checked("start"), "시작 희망 시기를 골라 주세요."]
+  ],
+  () => [
+    [checked("focus_subject"), "집중하고 싶은 과목을 하나 이상 골라 주세요."],
+    [checked("improvement"), "개선하고 싶은 점을 하나 이상 골라 주세요."]
+  ],
+  () => [
+    [$("consult_date").value, "방문 상담 희망 날짜를 골라 주세요."],
+    [checked("consult_time"), "방문 상담 시간을 골라 주세요."],
+    [$("f_privacy").checked, "개인정보 수집 및 이용에 동의해 주셔야 신청할 수 있습니다."]
+  ]
+];
+function validate(i){
+  for (const [ok, text] of RULES[i]()){ if(!ok){ showMsg("err", text); return false; } }
+  return true;
+}
+
+function go(i){
+  step = i;
+  panes.forEach((p, k) => p.hidden = k !== i);
+  [...$("steps").children].forEach((li, k) => { li.className = k === i ? "on" : (k < i ? "done" : ""); });
+  $("prev-btn").hidden = i === 0;
+  $("next-btn").hidden = i === panes.length - 1;
+  $("submit-btn").hidden = i !== panes.length - 1;
+  $("form-msg").hidden = true;
+  $("apply").scrollIntoView({block:"start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+}
+$("next-btn").addEventListener("click", () => { if(validate(step)) go(step + 1); });
+$("prev-btn").addEventListener("click", () => go(step - 1));
+
+function payload(){
+  const t = track();
+  const p = new URLSearchParams();
+  p.append("track", t);
+  p.append("student_name", $("f_student_name").value.trim());
+  p.append("school_name", $("f_school_name").value.trim());
+  p.append("grade", $("f_grade").value);
+  p.append("gender", checked("gender"));
+  p.append("school_grade", $("f_school_grade").value.trim());
+  p.append("mock_grade", t === "고등부" ? $("f_mock_grade").value.trim() : "");
+  p.append("parent_phone", $("f_parent_phone").value.trim());
+  p.append("student_phone", $("f_student_phone").value.trim());
+  p.append("start", checked("start"));
+  p.append("focus_subject", checked("focus_subject"));
+  p.append("improvement", checked("improvement"));
+  p.append("english_issue", checked("english_issue"));
+  p.append("math_issue", checked("math_issue"));
+  p.append("general_issue", checked("general_issue"));
+  p.append("consult_date", $("consult_date").value);
+  p.append("consult_time", checked("consult_time"));
+  p.append("early_registration", $("f_early").checked ? "희망" : "");
+  p.append("message", $("f_message").value.trim());
+  return p;
+}
+
+/* 구글 시트로 보내고 저장 결과를 받아옵니다(JSONP). 시트에 실제로 저장된 뒤에만 완료 화면이 뜹니다. */
+function send(params){
+  return new Promise((resolve, reject) => {
+    const cb = "edenCb_" + Date.now();
+    params.append("callback", cb);
+    const s = document.createElement("script");
+    const timer = setTimeout(() => done(new Error("응답 없음")), 20000);
+    function done(err, data){
+      clearTimeout(timer); delete window[cb]; s.remove();
+      err ? reject(err) : resolve(data);
+    }
+    window[cb] = (data) => done(null, data);
+    s.onerror = () => done(new Error("접수 주소에 연결하지 못함"));
+    s.src = SCRIPT_URL + "?" + params.toString();
+    document.body.appendChild(s);
+  });
+}
+
+function finish(text){
+  form.hidden = true; $("steps").hidden = true;
+  $("done-text").textContent = text; $("done").hidden = false;
+  $("apply").scrollIntoView({block:"start"});
+}
+$("again-btn").addEventListener("click", () => {
+  form.reset(); renderTrack(); renderSlots();
+  form.hidden = false; $("steps").hidden = false; $("done").hidden = true; go(0);
+});
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("form-msg").hidden = true;
+  if(step !== panes.length - 1 || !validate(step)) return;
+  const name = $("f_student_name").value.trim();
+  if(!SCRIPT_URL){
+    showMsg("info", `미리보기라서 실제로 접수되지는 않았습니다. 입력은 모두 올바릅니다. (${name} 학생)`);
+    return;
+  }
+  const btn = $("submit-btn"); btn.disabled = true; btn.textContent = "보내는 중입니다...";
+  try{
+    const res = await send(payload());
+    if(!res || !res.ok) throw new Error((res && res.error) || "저장 실패");
+    finish(`${name} 학생의 사전 예약이 접수되었습니다. 담당 선생님이 확인 후 연락드리겠습니다.`);
+  }catch(err){
+    console.error("사전 예약 전송 실패:", err);
+    showMsg("err", "신청서를 보내지 못했습니다. 잠시 후 다시 눌러 주세요. 계속 안 되면 010-8442-2817로 전화 주세요.");
+  }finally{
+    btn.disabled = false; btn.textContent = "사전 예약 신청하기";
+  }
+});
+/* 1·2단계에서 키보드 Enter로 제출되지 않도록 다음 단계로 넘깁니다 */
+form.addEventListener("keydown", (e) => {
+  if(e.key === "Enter" && e.target.tagName === "INPUT" && step < panes.length - 1){ e.preventDefault(); $("next-btn").click(); }
+});
+
+if(!SCRIPT_URL) $("preview-note").hidden = false;
+renderTrack();
+</script>
+</body>
+</html>
