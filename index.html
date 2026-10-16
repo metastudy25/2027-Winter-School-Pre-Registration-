@@ -271,7 +271,7 @@ footer{background:var(--ink);color:var(--frost);text-align:center;padding:22px 1
       <div class="nav">
         <button type="button" class="btn btn-ghost" id="prev-btn" hidden>이전</button>
         <button type="button" class="btn btn-ember" id="next-btn">다음</button>
-        <button type="submit" class="btn btn-ember" id="submit-btn" hidden>사전 예약 신청하기</button>
+        <button type="button" class="btn btn-ember" id="submit-btn" hidden>사전 예약 신청하기</button>
       </div>
     </form>
 
@@ -438,8 +438,9 @@ $("again-btn").addEventListener("click", () => {
   form.hidden = false; $("steps").hidden = false; $("done").hidden = true; go(0);
 });
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+/* 미리보기 창처럼 양식 제출이 막힌 곳에서도 동작하도록 버튼 클릭으로 직접 보냅니다 */
+form.addEventListener("submit", (e) => e.preventDefault());
+$("submit-btn").addEventListener("click", async () => {
   $("form-msg").hidden = true;
   if(step !== panes.length - 1 || !validate(step)) return;
   const name = $("f_student_name").value.trim();
