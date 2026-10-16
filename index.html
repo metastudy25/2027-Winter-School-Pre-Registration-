@@ -294,7 +294,7 @@ footer{background:var(--ink);color:var(--frost);text-align:center;padding:22px 1
 
 <script>
 /* ★ 구글 시트 연결: Apps Script 배포 후 받은 웹 앱 URL을 아래 따옴표 안에 붙여 넣으세요. 비어 있으면 미리보기로 동작합니다. */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYQyzIzBj3qf7oVHtGQE1qkiGCJlJlB5lJFGfpomDEx6-GNEuxZirkycXC6nyupWNl/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8_KLCJXtvFb_whtTfTetTrtznN-ToiqqyxGw-zt3d6HDJqge453P0YXDIl5Zkp02x/exec";
 
 const GRADES = {
   "고등부": ["예비 고1","예비 고2","예비 고3","N수생"],
@@ -455,7 +455,7 @@ $("submit-btn").addEventListener("click", async () => {
     finish(`${name} 학생의 사전 예약이 접수되었습니다. 담당 선생님이 확인 후 연락드리겠습니다.`);
   }catch(err){
     console.error("사전 예약 전송 실패:", err);
-    showMsg("err", "신청서를 보내지 못했습니다. 잠시 후 다시 눌러 주세요. 계속 안 되면 010-8442-2817로 전화 주세요.");
+    showMsg("err", `신청서를 보내지 못했습니다. 잠시 후 다시 눌러 주세요. 계속 안 되면 010-8442-2817로 전화 주세요. (원인: ${err.message})`);
   }finally{
     btn.disabled = false; btn.textContent = "사전 예약 신청하기";
   }
